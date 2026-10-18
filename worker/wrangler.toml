@@ -5,7 +5,11 @@ compatibility_date = "2025-01-01"
 [vars]
 ALLOWED_ORIGINS = "https://gopixo.shop,https://www.gopixo.shop,http://gopixo.shop,http://www.gopixo.shop,https://arhimedrep.github.io"
 
-# Идентификатор KV подставляется при создании (wrangler kv namespace create CHAT)
-[[kv_namespaces]]
-binding = "CHAT"
-id = "de776dabfa5e48e7a9507c0fbe329ec1"
+# Переписка хранится в Durable Objects: запись видна сразу, без задержки KV
+[[durable_objects.bindings]]
+name = "HUB"
+class_name = "Hub"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Hub"]

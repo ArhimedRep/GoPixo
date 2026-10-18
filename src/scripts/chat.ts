@@ -64,7 +64,7 @@ if (root) {
   const startPolling = () => {
     window.clearInterval(timer);
     poll();
-    timer = window.setInterval(() => !document.hidden && poll(), 4000);
+    timer = window.setInterval(() => !document.hidden && poll(), 3000);
   };
 
   const setOpen = (open: boolean) => {
