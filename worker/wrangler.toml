@@ -8,4 +8,4 @@ ALLOWED_ORIGINS = "https://gopixo.shop,https://www.gopixo.shop,https://arhimedre
 # Идентификатор KV подставляется при создании (wrangler kv namespace create CHAT)
 [[kv_namespaces]]
 binding = "CHAT"
-id = "REPLACE_KV_ID"
+id = "de776dabfa5e48e7a9507c0fbe329ec1"
