@@ -58,13 +58,17 @@ const hub = (env, name) => env.HUB.get(env.HUB.idFromName(name));
 // Одна запись Durable Object = одна переписка (имя = sid).
 // Объекты "index" и "limits" хранят связь сообщений Telegram с диалогами и счётчики запросов.
 export class Hub extends DurableObject {
-  async append(from, text, name) {
+  async append(from, text, name, info) {
     const chat = (await this.ctx.storage.get('chat')) ?? { next: 1, msgs: [] };
     const first = chat.msgs.length === 0;
     const msg = { id: chat.next++, from, text, ts: Date.now() };
     chat.msgs.push(msg);
     if (chat.msgs.length > MAX_MSGS) chat.msgs = chat.msgs.slice(-MAX_MSGS);
     if (name) chat.name = name;
+    if (info && !chat.info) {
+      chat.info = info;
+      chat.started = msg.ts;
+    }
     await this.ctx.storage.put('chat', chat);
     await this.ctx.storage.setAlarm(Date.now() + TTL * 1000);
     return { id: msg.id, first, name: chat.name };
@@ -72,6 +76,10 @@ export class Hub extends DurableObject {
   async poll(after) {
     const chat = await this.ctx.storage.get('chat');
     return (chat?.msgs ?? []).filter((m) => m.id > after);
+  }
+  async getInfo() {
+    const chat = await this.ctx.storage.get('chat');
+    return chat ? { name: chat.name, info: chat.info, started: chat.started, count: chat.msgs.length } : null;
   }
   async alarm() {
     await this.ctx.storage.deleteAll();
@@ -133,7 +141,7 @@ async function handleSend(req, env) {
   const chatHub = hub(env, sid);
   if (!(await hub(env, 'limits').hit(`s:${sid}`, RATE_PER_HOUR))) return json({ error: 'rate_limited' }, 429);
 
-  const saved = await chatHub.append('user', text, name);
+  const saved = await chatHub.append('user', text, name, visitorInfo(req, b));
   if (saved.first) await hub(env, 'index').register(sid);
   const tag = sid.slice(0, 6);
   const was = saved.first && SID_RE.test(prev) && prev !== sid ? ` (прошлый: #${prev.slice(0, 6)})` : '';
@@ -209,7 +217,31 @@ async function handleTelegram(req, env) {
         await say(`Диалог #${arg} удалён с сервера.`);
       }
     } else {
-      await say('Команды: /clear #метка — удалить один диалог, /clear all — удалить все диалоги.');
+      await say('Команды: /clear #метка — удалить один диалог, /clear all — удалить все диалоги, /info #метка — данные о посетителе.');
+    }
+    return new Response('ok');
+  }
+
+  const info = /^\/info(?:@\w+)?\s*(.*)$/i.exec(m.text ?? '');
+  if (info) {
+    const arg = info[1].trim().replace(/^#/, '').toLowerCase();
+    if (!/^[a-z0-9]{4,}$/.test(arg)) {
+      await say('Напишите так: /info #метка (метка стоит в заголовке сообщения диалога).');
+      return new Response('ok');
+    }
+    const sids = await hub(env, 'index').findByTag(arg);
+    if (sids.length !== 1) {
+      await say(sids.length ? 'Метке соответствует несколько диалогов, укажите её длиннее.' : `Диалог #${arg} не найден.`);
+      return new Response('ok');
+    }
+    const d = await hub(env, sids[0]).getInfo();
+    if (!d) {
+      await say(`Диалог #${arg} не найден.`);
+    } else if (!d.info) {
+      await say(`Диалог #${arg}${d.name ? ` · ${d.name}` : ''}\nДанных о посетителе нет: диалог начат до включения сбора.`);
+    } else {
+      const when = new Date(d.started).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+      await say(`Диалог #${arg}${d.name ? ` · ${d.name}` : ''}\nНачат: ${when} МСК, сообщений: ${d.count}\n\n${d.info}`);
     }
     return new Response('ok');
   }
