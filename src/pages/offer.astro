@@ -1,6 +1,5 @@
 ---
 import LegalLayout from '../components/LegalLayout.astro';
-import Executor from '../components/Executor.astro';
 import Field from '../components/Field.astro';
 import { site, legal } from '../config/site';
 import { withBase } from '../utils/url';
@@ -19,10 +18,6 @@ const privacyUrl = withBase('privacy/');
   </p>
 
   <h2>1. Общие положения</h2>
-  <p>
-    Настоящий документ является публичной офертой (ст. 435 и п. 2 ст. 437 Гражданского кодекса РФ) — предложением <Executor /> (далее — Исполнитель)
-    заключить договор оказания услуг по разработке сайтов с любым лицом, которое примет его условия (далее — Заказчик).
-  </p>
   <p>
     Акцептом оферты является оплата счёта (аванса) либо письменное подтверждение Заказчиком условий заказа (по электронной почте или в мессенджере) после того,
     как стороны согласовали бриф, срок и стоимость. С момента акцепта договор считается заключённым (ст. 438 ГК РФ).
@@ -99,8 +94,6 @@ const privacyUrl = withBase('privacy/');
 
   <h2>12. Реквизиты Исполнителя</h2>
   <dl>
-    <dt>Исполнитель</dt>
-    <dd><Executor /></dd>
     {legal.status === 'ip' && (<><dt>Адрес</dt><dd><Field value={legal.address} hint="адрес" /></dd></>)}
     <dt>Электронная почта</dt>
     <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
