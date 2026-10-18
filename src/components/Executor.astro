@@ -1,0 +1,7 @@
+---
+import { legal } from '../config/site';
+import Field from './Field.astro';
+---
+{legal.status === 'ip' && (<>Индивидуальный предприниматель <Field value={legal.fullName} hint="ФИО" /> (ИНН <Field value={legal.inn} hint="ИНН" />, ОГРНИП <Field value={legal.ogrnip} hint="ОГРНИП" />)</>)}
+{legal.status === 'npd' && (<><Field value={legal.fullName} hint="ФИО" />, самозанятый (плательщик налога на профессиональный доход), ИНН <Field value={legal.inn} hint="ИНН" /></>)}
+{!legal.status && (<><Field value={legal.fullName} hint="ФИО" />, <Field value="" hint="статус: самозанятый или ИП" />, ИНН <Field value={legal.inn} hint="ИНН" /></>)}

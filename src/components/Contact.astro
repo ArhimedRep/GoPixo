@@ -1,6 +1,7 @@
 ---
 import type { Dict } from '../i18n/ru';
 import { site } from '../config/site';
+import { withBase } from '../utils/url';
 import Arrow from './Arrow.astro';
 
 interface Props {
@@ -15,6 +16,7 @@ const cfg = {
   labels: f.mailLabels,
   copied: f.copied,
   copy: f.copy,
+  consentYes: f.consentYes,
 };
 ---
 
@@ -30,7 +32,7 @@ const cfg = {
       </div>
     </div>
 
-    <form class="form" data-reveal novalidate data-config={JSON.stringify(cfg)} data-required={f.errRequired} data-invalid-contact={f.errContact}>
+    <form class="form" data-reveal novalidate data-config={JSON.stringify(cfg)} data-required={f.errRequired} data-invalid-contact={f.errContact} data-err-consent={f.errConsent}>
       <p class="mono" style="color:var(--muted-on-ink)">{c.orForm}</p>
 
       <div class="field">
@@ -56,6 +58,16 @@ const cfg = {
         <label class="mono" for="f-message">{f.message}</label>
         <textarea id="f-message" name="message" rows="4" maxlength="1500" placeholder={f.messagePh} required aria-describedby="e-message"></textarea>
         <p class="field__err" id="e-message" aria-live="polite"></p>
+      </div>
+
+      <div class="field field--check">
+        <label class="check" for="f-consent">
+          <input id="f-consent" name="consent" type="checkbox" required aria-describedby="e-consent" />
+          <span>
+            {f.consentBefore}{' '}<a href={withBase('consent/')} target="_blank" rel="noopener" hreflang="ru">{f.consentLink}</a>{' '}{f.consentMiddle}{' '}<a href={withBase('privacy/')} target="_blank" rel="noopener" hreflang="ru">{f.policyLink}</a>
+          </span>
+        </label>
+        <p class="field__err" id="e-consent" aria-live="polite"></p>
       </div>
 
       <button class="btn" type="submit">{f.submit}<Arrow /></button>

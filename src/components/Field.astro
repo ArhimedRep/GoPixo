@@ -1,0 +1,8 @@
+---
+interface Props {
+  value?: string;
+  hint: string;
+}
+const { value, hint } = Astro.props;
+---
+{value ? value : <mark class="todo">[{hint}]</mark>}

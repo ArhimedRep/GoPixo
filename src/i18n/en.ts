@@ -62,19 +62,19 @@ export const en: Dict = {
         title: 'Landing page',
         text: 'A single page that explains your offer and leads to an inquiry. A strong first screen, clear structure and a contact form.',
         tags: ['Design', 'Development', 'Contact form'],
-        time: 'from 5 days',
+        time: 'from 1 day',
       },
       {
         title: 'Company website',
         text: 'Several pages: services, about, case studies, contacts. One design system, an SEO foundation and a structure that can grow.',
         tags: ['Multi-page', 'SEO', 'Design system'],
-        time: 'from 2 weeks',
+        time: 'from 3 days',
       },
       {
         title: 'Online store',
         text: 'Catalog, product pages, cart and checkout. Payment and delivery integrations are agreed for the services you use.',
         tags: ['Catalog', 'Cart', 'Payments'],
-        time: 'from 4 weeks',
+        time: 'from 5 days',
       },
       {
         title: 'Web application',
@@ -158,7 +158,7 @@ export const en: Dict = {
       },
       {
         q: 'How long will it take?',
-        a: 'A landing page usually takes from 5 days, a company site from 2 weeks, a store from 4 weeks. I give exact timelines after we discuss the task, and they depend on how fast the stages are approved.',
+        a: 'A landing page can be ready from 1 day, a company site from 3 days, an online store from 5 days. I give the exact timeline after we discuss the task: it depends on scope and on how fast we approve the stages.',
       },
       {
         q: 'What do you need from me to start?',
@@ -166,15 +166,11 @@ export const en: Dict = {
       },
       {
         q: 'Do I need hosting and a domain?',
-        a: 'I will help you choose and set them up. Free hosting is enough for many sites; a domain is bought separately and typically costs around $10–15 a year.',
+        a: 'I will help you choose and set them up. Free hosting is enough for many sites, for example GitHub Pages, which this site runs on. A domain and paid hosting are bought separately; their cost depends on the registrar and plan and is quoted by estimate.',
       },
       {
         q: 'Can I request changes after launch?',
-        a: 'Yes. I make small edits in the first weeks at no extra charge, after that we agree on a support format. The site can be built so you can update the content yourself.',
-      },
-      {
-        q: 'Do you work under a contract?',
-        a: 'Yes. Scope, timeline and price are written down in a contract, with payment in stages. It keeps things calm for both sides.',
+        a: 'Yes. I make small edits in the first week after launch for free, after that we agree on a support format.',
       },
     ],
   },
@@ -203,12 +199,22 @@ export const en: Dict = {
       copy: 'Copy text',
       copied: 'Copied',
       mailSubject: 'Website inquiry',
-      mailLabels: { name: 'Name', contact: 'Contact', type: 'Project type', message: 'About the task' },
+      mailLabels: { name: 'Name', contact: 'Contact', type: 'Project type', message: 'About the task', consent: 'Consent to personal data processing' },
+      consentYes: 'given',
+      consentBefore: 'I consent to the',
+      consentLink: 'processing of my personal data',
+      consentMiddle: 'and have read the',
+      policyLink: 'Privacy Policy (in Russian)',
+      errConsent: 'The request cannot be sent without consent',
     },
   },
   footer: {
     rights: 'All rights reserved',
     built: 'Built with Astro',
     top: 'Back to top',
+    docs: 'Legal documents',
+    privacy: 'Privacy policy (RU)',
+    consent: 'Data processing consent (RU)',
+    offer: 'Public offer (RU)',
   },
 };

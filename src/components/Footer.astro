@@ -1,17 +1,34 @@
 ---
 import type { Dict } from '../i18n/ru';
-import { site } from '../config/site';
+import { site, executorLine } from '../config/site';
+import { withBase } from '../utils/url';
 
 interface Props {
   t: Dict;
 }
 const { t } = Astro.props;
+const executor = executorLine();
+const docs = [
+  { href: withBase('privacy/'), label: t.footer.privacy },
+  { href: withBase('consent/'), label: t.footer.consent },
+  { href: withBase('offer/'), label: t.footer.offer },
+];
 ---
 
 <footer class="footer on-ink">
-  <div class="container footer__row">
-    <span>© {new Date().getFullYear()} {site.brand}. {t.footer.rights}</span>
-    <span>{t.footer.built}</span>
-    <a href="#top">{t.footer.top} ↑</a>
+  <div class="container">
+    <div class="footer__docs">
+      <nav aria-label={t.footer.docs}>
+        <ul>
+          {docs.map((d) => <li><a href={d.href} hreflang="ru">{d.label}</a></li>)}
+        </ul>
+      </nav>
+      {executor && <p class="footer__exec">{executor}</p>}
+    </div>
+    <div class="footer__row">
+      <span>© {new Date().getFullYear()} {site.brand}. {t.footer.rights}</span>
+      <span>{t.footer.built}</span>
+      <a href="#top">{t.footer.top} ↑</a>
+    </div>
   </div>
 </footer>

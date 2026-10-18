@@ -1185,7 +1185,7 @@ textarea {
 .field label {
   color: var(--muted-on-ink);
 }
-.field input,
+.field input:not([type='checkbox']),
 .field select,
 .field textarea {
   width: 100%;
@@ -1213,22 +1213,22 @@ textarea {
 .field select option {
   color: var(--ink);
 }
-.field input::placeholder,
+.field input:not([type='checkbox'])::placeholder,
 .field textarea::placeholder {
   color: #7d7a6e;
 }
-.field input:hover,
+.field input:not([type='checkbox']):hover,
 .field select:hover,
 .field textarea:hover {
   border-color: var(--muted-on-ink);
 }
-.field input:focus-visible,
+.field input:not([type='checkbox']):focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
   outline: 0;
   border-color: var(--accent);
 }
-.field[data-invalid='true'] input,
+.field[data-invalid='true'] input:not([type='checkbox']),
 .field[data-invalid='true'] textarea {
   border-color: #ff7a59;
 }
@@ -1290,6 +1290,209 @@ textarea {
 }
 .footer a:hover {
   color: var(--paper);
+}
+
+/* Clickable service rows */
+.svc {
+  cursor: pointer;
+}
+.svc__title a {
+  color: inherit;
+  text-decoration: none;
+}
+.svc__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.svc__title a:focus-visible {
+  outline: none;
+}
+.svc:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+.svc__meta,
+.svc .tags {
+  position: relative;
+  pointer-events: none;
+}
+
+/* Consent checkbox */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding-block: 0.4rem;
+  color: var(--muted-on-ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.check input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 0.05rem 0 0;
+  border: 1.5px solid var(--muted-on-ink);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.check input:hover {
+  border-color: var(--paper);
+}
+.check input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check input:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: rotate(45deg);
+}
+.check input:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+.check a {
+  color: var(--paper);
+  text-underline-offset: 3px;
+}
+.field--check[data-invalid='true'] .check input {
+  border-color: #ff7a59;
+}
+
+/* Footer documents */
+.footer__docs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line-on-ink);
+}
+.footer__docs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+}
+.footer__docs a {
+  display: inline-block;
+  padding-block: 0.4rem;
+  text-decoration: underline;
+  text-decoration-color: var(--line-on-ink);
+  text-underline-offset: 4px;
+}
+.footer__docs a:hover {
+  text-decoration-color: currentColor;
+}
+.footer__exec {
+  max-width: 40em;
+}
+
+/* Legal pages */
+.legal {
+  padding-top: calc(var(--header-h) + clamp(2rem, 1rem + 4vw, 4.5rem));
+  padding-bottom: var(--section-y);
+}
+.legal__wrap {
+  max-width: 860px;
+}
+.legal__back {
+  display: inline-block;
+  margin-bottom: 2rem;
+  padding-block: 0.4rem;
+  color: var(--muted);
+  text-underline-offset: 4px;
+}
+.legal__back:hover {
+  color: var(--ink);
+}
+.legal__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.8rem, 1rem + 3.4vw, 3.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.legal__meta {
+  margin-top: 1.25rem;
+  color: var(--muted);
+}
+.prose {
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  padding-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-top: 1px solid var(--ink);
+  font-size: 1.0625rem;
+}
+.prose > * + * {
+  margin-top: 1rem;
+}
+.prose h2 {
+  margin-top: 2.5rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 1rem + 0.7vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+.prose ol,
+.prose ul {
+  padding-left: 1.4rem;
+  list-style: revert;
+}
+.prose li + li {
+  margin-top: 0.4rem;
+}
+.prose a {
+  text-underline-offset: 3px;
+}
+.prose dl {
+  display: grid;
+  gap: 0.35rem 1.5rem;
+}
+.prose dt {
+  color: var(--muted);
+}
+.prose dd {
+  margin: 0 0 0.6rem;
+}
+@media (min-width: 40rem) {
+  .prose dl {
+    grid-template-columns: 11rem 1fr;
+  }
+  .prose dd {
+    margin: 0;
+  }
+}
+.todo {
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+  background: #ffd9cc;
+  color: #7a1e00;
+  font-style: normal;
+  font-weight: 600;
+}
+.note {
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  background: var(--paper-2);
+  color: var(--ink);
 }
 
 /* Motion */

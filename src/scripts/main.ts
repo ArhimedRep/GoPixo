@@ -87,18 +87,28 @@ if (navLinks.length && 'IntersectionObserver' in window) {
   });
 }
 
+// Preselect the project type in the form when a service is clicked
+document.querySelectorAll<HTMLAnchorElement>('[data-service]').forEach((a) => {
+  a.addEventListener('click', () => {
+    const select = document.querySelector<HTMLSelectElement>('#f-type');
+    if (select) select.selectedIndex = Number(a.dataset.service);
+  });
+});
+
 // Contact form: builds a mailto draft, no backend required
 const form = document.querySelector<HTMLFormElement>('form[data-config]');
 if (form) {
   const cfg = JSON.parse(form.dataset.config ?? '{}') as {
     email: string;
     subject: string;
-    labels: { name: string; contact: string; type: string; message: string };
+    labels: { name: string; contact: string; type: string; message: string; consent: string };
+    consentYes: string;
     copy: string;
     copied: string;
   };
   const errRequired = form.dataset.required ?? '';
   const errContact = form.dataset.invalidContact ?? '';
+  const errConsent = form.dataset.errConsent ?? '';
   const ok = form.querySelector<HTMLElement>('.form__ok');
   const copyBtn = form.querySelector<HTMLButtonElement>('[data-copy]');
   let draft = '';
@@ -122,11 +132,13 @@ if (form) {
     setError('name', name ? '' : errRequired);
     setError('contact', !contact ? errRequired : contactRe.test(contact) ? '' : errContact);
     setError('message', message ? '' : errRequired);
-    return Boolean(name && contact && contactRe.test(contact) && message);
+    const consent = (form.elements.namedItem('consent') as HTMLInputElement).checked;
+    setError('consent', consent ? '' : errConsent);
+    return Boolean(name && contact && contactRe.test(contact) && message && consent);
   };
 
-  ['name', 'contact', 'message'].forEach((n) => {
-    form.elements.namedItem(n)?.addEventListener('input', () => {
+  ['name', 'contact', 'message', 'consent'].forEach((n) => {
+    form.elements.namedItem(n)?.addEventListener(n === 'consent' ? 'change' : 'input', () => {
       if ((form.elements.namedItem(n) as HTMLInputElement).getAttribute('aria-invalid') === 'true') validate();
     });
   });
@@ -146,6 +158,8 @@ if (form) {
       '',
       `${l.message}:`,
       String(d.get('message')).trim(),
+      '',
+      `${l.consent}: ${cfg.consentYes} (${new Date().toLocaleString(document.documentElement.lang || 'ru')})`,
     ].join('\n');
     window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent(cfg.subject)}&body=${encodeURIComponent(draft)}`;
     if (ok) {

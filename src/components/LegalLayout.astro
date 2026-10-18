@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { ru } from '../i18n/ru';
+import { legal } from '../config/site';
+import { withBase } from '../utils/url';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+const { title, description, path } = Astro.props;
+---
+
+<Base t={ru} title={`${title} — GoPixo`} description={description} path={path} alternates={false}>
+  <Header t={ru} onHome={false} />
+  <main id="main" class="legal">
+    <div class="container legal__wrap">
+      <a class="legal__back" href={withBase('')}>← На главную</a>
+      <p class="label mono">Документ</p>
+      <h1 class="legal__title">{title}</h1>
+      <p class="legal__meta mono">Редакция от {legal.updated}</p>
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </main>
+  <Footer t={ru} />
+</Base>

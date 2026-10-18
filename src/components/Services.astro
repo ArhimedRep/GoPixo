@@ -24,7 +24,7 @@ const s = t.services;
         s.items.map((it, i) => (
           <li class="svc" data-reveal>
             <span class="svc__num mono">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="svc__title">{it.title}</h3>
+            <h3 class="svc__title"><a href="#contact" data-service={i}>{it.title}</a></h3>
             <div>
               <p class="svc__text">{it.text}</p>
               <ul class="tags">{it.tags.map((tag) => <li>{tag}</li>)}</ul>
