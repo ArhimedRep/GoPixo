@@ -26,6 +26,7 @@ const c = t.chat;
             <b>{c.title}</b>
             <span>{c.sub}</span>
           </div>
+          <button class="chat__new" type="button" data-chat-new>{c.newChat}</button>
           <button class="chat__x" type="button" aria-label={c.close} data-chat-toggle>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
               <path d="M6 6l12 12M18 6 6 18" />
@@ -34,7 +35,7 @@ const c = t.chat;
         </header>
 
         <div class="chat__log" role="log" aria-live="polite" data-chat-log>
-          <p class="chat__msg chat__msg--them">{c.intro}</p>
+          <p class="chat__msg chat__msg--them" data-chat-intro>{c.intro}</p>
         </div>
 
         <form class="chat__form" novalidate data-chat-form>

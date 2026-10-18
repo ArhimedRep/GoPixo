@@ -1,3 +1,5 @@
+type Msg = { id: number; from: 'user' | 'admin'; text: string };
+
 const root = document.querySelector<HTMLElement>('[data-chat]');
 
 if (root) {
@@ -26,16 +28,25 @@ if (root) {
         /* приватный режим: чат работает до закрытия вкладки */
       }
     },
+    del: (k: string) => {
+      try {
+        localStorage.removeItem(k);
+      } catch {
+        /* то же */
+      }
+    },
   };
+
+  // randomUUID доступен только по HTTPS, поэтому собираем идентификатор сами
+  const newSid = () => Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
 
   let sid = store.get('gp_sid');
   if (!sid || !/^[a-z0-9-]{16,64}$/.test(sid)) {
-    // randomUUID доступен только по HTTPS, поэтому собираем идентификатор сами
-    const bytes = crypto.getRandomValues(new Uint8Array(16));
-    sid = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+    sid = newSid();
     store.set('gp_sid', sid);
   }
-  let after = Number(store.get('gp_after') ?? 0);
+  const rendered = new Set<number>();
+  let after = 0;
   let timer: number | undefined;
 
   const add = (who: 'me' | 'them', body: string) => {
@@ -46,16 +57,20 @@ if (root) {
     log.scrollTop = log.scrollHeight;
   };
 
+  // История и новые ответы приходят с сервера, поэтому после обновления страницы переписка на месте
   const poll = async () => {
+    const mine = sid;
     try {
-      const r = await fetch(`${api}/poll?sid=${sid}&after=${after}`);
-      if (!r.ok) return;
-      const d = (await r.json()) as { msgs: { id: number; text: string }[] };
+      const r = await fetch(`${api}/poll?sid=${mine}&after=${after}`);
+      if (!r.ok || mine !== sid) return;
+      const d = (await r.json()) as { msgs: Msg[] };
+      if (d.msgs.length) store.set('gp_used', '1');
       for (const m of d.msgs) {
-        add('them', m.text);
         after = Math.max(after, m.id);
+        if (rendered.has(m.id)) continue;
+        rendered.add(m.id);
+        add(m.from === 'user' ? 'me' : 'them', m.text);
       }
-      if (d.msgs.length) store.set('gp_after', String(after));
     } catch {
       /* сеть пропала: попробуем на следующем тике */
     }
@@ -85,6 +100,20 @@ if (root) {
     if (e.key === 'Escape' && !panel.hidden) setOpen(false);
   });
 
+  // Новый чат: новый код диалога; в Telegram первое сообщение придёт с пометкой о прошлом коде
+  root.querySelector('[data-chat-new]')!.addEventListener('click', () => {
+    if (store.get('gp_used') === '1') store.set('gp_prev', sid!);
+    sid = newSid();
+    store.set('gp_sid', sid);
+    store.del('gp_used');
+    rendered.clear();
+    after = 0;
+    log.querySelectorAll('.chat__msg:not([data-chat-intro])').forEach((n) => n.remove());
+    err.textContent = '';
+    text.value = '';
+    text.focus();
+  });
+
   if (store.get('gp_consent') === '1') consent.checked = true;
   if (store.get('gp_name')) nameEl.value = store.get('gp_name') ?? '';
 
@@ -109,11 +138,15 @@ if (root) {
       const r = await fetch(`${api}/send`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ sid, text: body, name: nameEl.value.trim(), consent: true }),
+        body: JSON.stringify({ sid, text: body, name: nameEl.value.trim(), consent: true, prev: store.get('gp_prev') ?? undefined }),
       });
       if (!r.ok) throw new Error(String(r.status));
+      const d = (await r.json()) as { id: number };
+      rendered.add(d.id);
       add('me', body);
       text.value = '';
+      store.set('gp_used', '1');
+      store.del('gp_prev');
       store.set('gp_consent', '1');
       store.set('gp_name', nameEl.value.trim());
     } catch (x) {

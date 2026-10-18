@@ -1748,3 +1748,21 @@ textarea {
     width: calc(100vw - 2rem);
   }
 }
+
+.chat__head > div {
+  margin-right: auto;
+}
+.chat__new {
+  min-height: 44px;
+  padding: 0 0.4rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted-on-ink);
+  font: 0.82rem var(--font-body);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.chat__new:hover {
+  color: var(--paper);
+}

@@ -213,6 +213,7 @@ export const en: Dict = {
   chat: {
     open: 'Chat with me',
     close: 'Close chat',
+    newChat: 'New chat',
     title: 'Chat with GoPixo',
     sub: 'I reply within the working day',
     intro: 'Hello! Tell me about your task or ask a question. The reply appears here while this tab is open, so please also leave a contact.',

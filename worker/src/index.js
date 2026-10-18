@@ -51,7 +51,7 @@ export class Hub extends DurableObject {
   }
   async poll(after) {
     const chat = await this.ctx.storage.get('chat');
-    return (chat?.msgs ?? []).filter((m) => m.id > after && m.from === 'admin');
+    return (chat?.msgs ?? []).filter((m) => m.id > after);
   }
   async alarm() {
     await this.ctx.storage.deleteAll();
@@ -81,6 +81,7 @@ async function handleSend(req, env) {
   const sid = String(b.sid ?? '');
   const text = String(b.text ?? '').trim();
   const name = String(b.name ?? '').trim().slice(0, 60);
+  const prev = String(b.prev ?? '');
   if (!SID_RE.test(sid)) return json({ error: 'bad_sid' }, 400);
   if (!text || text.length > MAX_TEXT) return json({ error: 'bad_text' }, 400);
   if (b.consent !== true) return json({ error: 'consent_required' }, 400);
@@ -90,7 +91,8 @@ async function handleSend(req, env) {
 
   const saved = await chatHub.append('user', text, name);
   const tag = sid.slice(0, 6);
-  const head = `${saved.first ? '💬 Новый чат' : '💬 Чат'} #${tag}${saved.name ? ` · ${saved.name}` : ''}`;
+  const was = saved.first && SID_RE.test(prev) && prev !== sid ? ` (прошлый: #${prev.slice(0, 6)})` : '';
+  const head = `${saved.first ? '💬 Новый чат' : '💬 Чат'} #${tag}${was}${saved.name ? ` · ${saved.name}` : ''}`;
   const res = await tg(env, 'sendMessage', {
     chat_id: env.ADMIN_ID,
     text: `${head}\n\n${text}\n\n— ответьте на это сообщение «ответом» (reply), чтобы написать посетителю`,
