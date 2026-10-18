@@ -56,6 +56,30 @@ export class Hub extends DurableObject {
   async alarm() {
     await this.ctx.storage.deleteAll();
   }
+  async wipe() {
+    await this.ctx.storage.deleteAlarm();
+    await this.ctx.storage.deleteAll();
+  }
+  async register(sid) {
+    await this.ctx.storage.put(`s:${sid}`, 1);
+  }
+  async findByTag(tag) {
+    const m = await this.ctx.storage.list({ prefix: `s:${tag}` });
+    return [...m.keys()].map((k) => k.slice(2));
+  }
+  async allSids() {
+    const m = await this.ctx.storage.list({ prefix: 's:' });
+    return [...m.keys()].map((k) => k.slice(2));
+  }
+  async forget(sid) {
+    await this.ctx.storage.delete(`s:${sid}`);
+    const t = await this.ctx.storage.list({ prefix: 't:' });
+    const del = [...t].filter(([, v]) => v === sid).map(([k]) => k);
+    if (del.length) await this.ctx.storage.delete(del);
+  }
+  async forgetAll() {
+    await this.ctx.storage.deleteAll();
+  }
   async setMap(id, sid) {
     await this.ctx.storage.put(`t:${id}`, sid);
   }
@@ -90,6 +114,7 @@ async function handleSend(req, env) {
   if (!(await hub(env, 'limits').hit(`s:${sid}`, RATE_PER_HOUR))) return json({ error: 'rate_limited' }, 429);
 
   const saved = await chatHub.append('user', text, name);
+  if (saved.first) await hub(env, 'index').register(sid);
   const tag = sid.slice(0, 6);
   const was = saved.first && SID_RE.test(prev) && prev !== sid ? ` (прошлый: #${prev.slice(0, 6)})` : '';
   const head = `${saved.first ? '💬 Новый чат' : '💬 Чат'} #${tag}${was}${saved.name ? ` · ${saved.name}` : ''}`;
@@ -145,6 +170,30 @@ async function handleTelegram(req, env) {
     await say('Бот чата GoPixo подключён. Сообщения с сайта будут приходить сюда. Чтобы ответить посетителю, отвечайте реплаем на его сообщение.');
     return new Response('ok');
   }
+  const clear = /^\/clear(?:@\w+)?\s*(.*)$/i.exec(m.text ?? '');
+  if (clear) {
+    const arg = clear[1].trim().replace(/^#/, '').toLowerCase();
+    const index = hub(env, 'index');
+    if (arg === 'all') {
+      const sids = await index.allSids();
+      for (const sid of sids) await hub(env, sid).wipe();
+      await index.forgetAll();
+      await say(`Удалено диалогов: ${sids.length}.`);
+    } else if (/^[a-z0-9]{4,}$/.test(arg)) {
+      const sids = await index.findByTag(arg);
+      if (sids.length !== 1) {
+        await say(sids.length ? 'Метке соответствует несколько диалогов, укажите её длиннее.' : `Диалог #${arg} не найден.`);
+      } else {
+        await hub(env, sids[0]).wipe();
+        await index.forget(sids[0]);
+        await say(`Диалог #${arg} удалён с сервера.`);
+      }
+    } else {
+      await say('Команды: /clear #метка — удалить один диалог, /clear all — удалить все диалоги.');
+    }
+    return new Response('ok');
+  }
+
   const target = m.reply_to_message?.message_id;
   if (!target) {
     await say('Чтобы ответить посетителю, ответьте реплаем на его сообщение.');
