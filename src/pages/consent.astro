@@ -1,6 +1,5 @@
 ---
 import LegalLayout from '../components/LegalLayout.astro';
-import Executor from '../components/Executor.astro';
 import Field from '../components/Field.astro';
 import { site, legal } from '../config/site';
 import { withBase } from '../utils/url';
@@ -15,7 +14,7 @@ const privacyUrl = withBase('privacy/');
 >
   <p>
     Я, пользователь сайта, действуя свободно, своей волей и в своём интересе, в соответствии со статьёй 9 Федерального закона от 27.07.2006 № 152-ФЗ
-    «О персональных данных», даю согласие оператору — <Executor /> (далее — Оператор){legal.status === 'ip' && <>, адрес: <Field value={legal.address} hint="адрес" /></>},
+    «О персональных данных», даю согласие оператору (далее — Оператор){legal.status === 'ip' && <>, адрес: <Field value={legal.address} hint="адрес" /></>},
     электронная почта <a href={`mailto:${site.email}`}>{site.email}</a>, на обработку моих персональных данных на следующих условиях.
   </p>
 

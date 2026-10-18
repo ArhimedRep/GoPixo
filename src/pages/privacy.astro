@@ -1,6 +1,5 @@
 ---
 import LegalLayout from '../components/LegalLayout.astro';
-import Executor from '../components/Executor.astro';
 import Field from '../components/Field.astro';
 import { site, legal } from '../config/site';
 import { withBase } from '../utils/url';
@@ -20,8 +19,7 @@ const consentUrl = withBase('consent/');
     Политика разработана в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных» (далее — Закон) и действует в отношении всех данных, которые Оператор может получить о пользователях Сайта.
   </p>
   <p>
-    Оператор персональных данных: <Executor /> (далее — Оператор).
-    Электронная почта: <a href={`mailto:${site.email}`}>{site.email}</a>.
+    Оператор персональных данных (далее — Оператор). Электронная почта: <a href={`mailto:${site.email}`}>{site.email}</a>.
     Telegram: <a href={`https://t.me/${site.telegram}`} rel="noopener">@{site.telegram}</a>.
     {legal.status === 'ip' && <> Адрес: <Field value={legal.address} hint="адрес" />.</>}
   </p>
