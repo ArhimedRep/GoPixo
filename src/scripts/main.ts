@@ -95,7 +95,7 @@ document.querySelectorAll<HTMLAnchorElement>('[data-service]').forEach((a) => {
   });
 });
 
-// Contact form: builds a mailto draft, no backend required
+// Contact form: sends the request to the Worker (Telegram); falls back to a mailto draft if that fails
 const form = document.querySelector<HTMLFormElement>('form[data-config]');
 if (form) {
   const cfg = JSON.parse(form.dataset.config ?? '{}') as {
@@ -103,6 +103,11 @@ if (form) {
     subject: string;
     labels: { name: string; contact: string; type: string; message: string; consent: string };
     consentYes: string;
+    api: string;
+    sentTitle: string;
+    sentText: string;
+    okTitle: string;
+    okText: string;
     copy: string;
     copied: string;
   };
@@ -149,7 +154,7 @@ if (form) {
     });
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validate()) {
       form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
@@ -167,11 +172,43 @@ if (form) {
       '',
       `${l.consent}: ${cfg.consentYes} (${new Date().toLocaleString(document.documentElement.lang || 'ru')})`,
     ].join('\n');
-    window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent(cfg.subject)}&body=${encodeURIComponent(draft)}`;
-    if (ok) {
+    const showOk = (title: string, text: string, withCopy: boolean) => {
+      if (!ok) return;
+      ok.querySelector('b')!.textContent = title;
+      ok.querySelector('p')!.textContent = text;
+      if (copyBtn) copyBtn.hidden = !withCopy;
       ok.hidden = false;
       ok.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+    };
+
+    if (cfg.api) {
+      submitBtn?.setAttribute('aria-busy', 'true');
+      try {
+        const r = await fetch(`${cfg.api}/lead`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name: String(d.get('name')).trim(),
+            contact: String(d.get('contact')).trim(),
+            type: String(d.get('type')),
+            message: String(d.get('message')).trim(),
+            consent: true,
+          }),
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        showOk(cfg.sentTitle, cfg.sentText, false);
+        form.reset();
+        syncLock();
+        return;
+      } catch {
+        /* отправка не удалась: ниже откроем черновик письма */
+      } finally {
+        submitBtn?.removeAttribute('aria-busy');
+      }
     }
+
+    window.location.href = `mailto:${cfg.email}?subject=${encodeURIComponent(cfg.subject)}&body=${encodeURIComponent(draft)}`;
+    showOk(cfg.okTitle, cfg.okText, true);
   });
 
   copyBtn?.addEventListener('click', async () => {

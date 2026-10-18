@@ -30,7 +30,9 @@ if (root) {
 
   let sid = store.get('gp_sid');
   if (!sid || !/^[a-z0-9-]{16,64}$/.test(sid)) {
-    sid = crypto.randomUUID();
+    // randomUUID доступен только по HTTPS, поэтому собираем идентификатор сами
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    sid = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
     store.set('gp_sid', sid);
   }
   let after = Number(store.get('gp_after') ?? 0);

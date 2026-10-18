@@ -77,6 +77,35 @@ async function handleSend(req, env) {
   return json({ ok: true, id: chat.msgs[chat.msgs.length - 1].id, delivered: Boolean(res.ok) });
 }
 
+async function handleLead(req, env) {
+  let b;
+  try {
+    b = await req.json();
+  } catch {
+    return json({ error: 'bad_json' }, 400);
+  }
+  const f = (k, n) => String(b[k] ?? '').trim().slice(0, n);
+  const name = f('name', 80);
+  const contact = f('contact', 120);
+  const type = f('type', 80);
+  const message = f('message', 1500);
+  if (!name || !contact || !message) return json({ error: 'bad_fields' }, 400);
+  if (b.consent !== true) return json({ error: 'consent_required' }, 400);
+
+  const ip = req.headers.get('CF-Connecting-IP') ?? 'unknown';
+  const rk = `l:${ip}:${Math.floor(Date.now() / 3.6e6)}`;
+  const n = Number((await env.CHAT.get(rk)) ?? 0);
+  if (n >= 8) return json({ error: 'rate_limited' }, 429);
+  await env.CHAT.put(rk, String(n + 1), { expirationTtl: 3700 });
+
+  const when = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+  const res = await tg(env, 'sendMessage', {
+    chat_id: env.ADMIN_ID,
+    text: `📩 Заявка с сайта\n\nИмя: ${name}\nКонтакт: ${contact}\nТип проекта: ${type}\n\n${message}\n\nСогласие на обработку ПДн: дано (${when} МСК)`,
+  });
+  return res.ok ? json({ ok: true }) : json({ error: 'delivery_failed' }, 502);
+}
+
 async function handlePoll(url, env) {
   const sid = url.searchParams.get('sid') ?? '';
   const after = Number(url.searchParams.get('after') ?? 0);
@@ -128,6 +157,7 @@ export default {
 
     let res;
     if (url.pathname === '/send' && req.method === 'POST') res = await handleSend(req, env);
+    else if (url.pathname === '/lead' && req.method === 'POST') res = await handleLead(req, env);
     else if (url.pathname === '/poll' && req.method === 'GET') res = await handlePoll(url, env);
     else res = json({ error: 'not_found' }, 404);
     for (const [k, v] of Object.entries(h)) res.headers.set(k, v);
