@@ -70,7 +70,11 @@ const cfg = {
         <p class="field__err" id="e-consent" aria-live="polite"></p>
       </div>
 
-      <button class="btn" type="submit">{f.submit}<Arrow /></button>
+      <button class="btn" type="submit" aria-disabled="true" aria-describedby="e-consent">
+        {f.submit}
+        <span class="btn__arrow"><Arrow /></span>
+        <svg class="btn__lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+      </button>
       <p class="form__hint">{f.hint}</p>
 
       <div class="form__ok" hidden role="status">

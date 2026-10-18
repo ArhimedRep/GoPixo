@@ -113,6 +113,12 @@ if (form) {
   const copyBtn = form.querySelector<HTMLButtonElement>('[data-copy]');
   let draft = '';
 
+  const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const consentBox = form.elements.namedItem('consent') as HTMLInputElement;
+  const syncLock = () => submitBtn?.setAttribute('aria-disabled', String(!consentBox.checked));
+  syncLock();
+  consentBox.addEventListener('change', syncLock);
+
   const contactRe = /^(?:[^\s@]+@[^\s@]+\.[^\s@]{2,}|@?[A-Za-z0-9_]{4,32}|\+?[\d\s()-]{7,20})$/;
 
   const setError = (name: string, msg: string) => {
