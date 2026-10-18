@@ -38,12 +38,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-  unset-custom-domain:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Remove custom domain from Pages settings
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: echo '{"cname":null}' | gh api -X PUT "repos/${{ github.repository }}/pages" --input -
