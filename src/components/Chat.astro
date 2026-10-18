@@ -1,0 +1,65 @@
+---
+import type { Dict } from '../i18n/ru';
+import { site } from '../config/site';
+import { withBase } from '../utils/url';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const c = t.chat;
+---
+
+{
+  site.chatApi && (
+    <div class="chat" data-chat data-api={site.chatApi} data-err-consent={c.errConsent} data-err-send={c.errSend} data-err-rate={c.errRate} data-me={c.me} data-them={c.them}>
+      <button class="chat__fab" type="button" aria-expanded="false" aria-controls="chat-panel" data-chat-toggle>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12Z" />
+        </svg>
+        <span>{c.open}</span>
+      </button>
+
+      <section class="chat__panel" id="chat-panel" hidden aria-label={c.title}>
+        <header class="chat__head">
+          <div>
+            <b>{c.title}</b>
+            <span>{c.sub}</span>
+          </div>
+          <button class="chat__x" type="button" aria-label={c.close} data-chat-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="chat__log" role="log" aria-live="polite" data-chat-log>
+          <p class="chat__msg chat__msg--them">{c.intro}</p>
+        </div>
+
+        <form class="chat__form" novalidate data-chat-form>
+          <input class="chat__name" name="name" type="text" maxlength="60" autocomplete="name" placeholder={c.namePh} aria-label={c.namePh} />
+          <label class="check chat__consent" for="chat-consent">
+            <input id="chat-consent" name="consent" type="checkbox" />
+            <span>
+              {c.consentBefore}{' '}<a href={withBase('consent/')} target="_blank" rel="noopener">{c.consentLink}</a>{' '}{c.consentMiddle}{' '}<a href={withBase('privacy/')} target="_blank" rel="noopener">{c.policyLink}</a>
+            </span>
+          </label>
+          <p class="chat__err" role="alert" data-chat-err />
+          <div class="chat__row">
+            <textarea name="text" rows="2" maxlength="1000" placeholder={c.messagePh} aria-label={c.messagePh} />
+            <button class="chat__send" type="submit" aria-label={c.send}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  )
+}
+
+<script>
+  import '../scripts/chat';
+</script>

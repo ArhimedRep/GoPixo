@@ -2,6 +2,8 @@ export const site = {
   brand: 'GoPixo',
   email: 'gopixo.support@gmail.com',
   telegram: 'GoPixoSupport', // без @
+  // Адрес Cloudflare Worker чата (см. worker/README.md). Пока пусто — окно чата не показывается.
+  chatApi: '',
 };
 
 // Сведения об исполнителе для юридических документов. Заполните своими данными:

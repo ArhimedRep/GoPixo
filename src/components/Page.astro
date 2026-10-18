@@ -10,6 +10,7 @@ import Work from './Work.astro';
 import Faq from './Faq.astro';
 import Contact from './Contact.astro';
 import Footer from './Footer.astro';
+import Chat from './Chat.astro';
 
 interface Props {
   t: Dict;
@@ -29,4 +30,5 @@ const { t } = Astro.props;
     <Contact t={t} />
   </main>
   <Footer t={t} />
+  <Chat t={t} />
 </Base>

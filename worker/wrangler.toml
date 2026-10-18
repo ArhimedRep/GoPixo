@@ -1,0 +1,11 @@
+name = "gopixo-chat"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://gopixo.shop,https://www.gopixo.shop,https://arhimedrep.github.io"
+
+# Идентификатор KV подставляется при создании (wrangler kv namespace create CHAT)
+[[kv_namespaces]]
+binding = "CHAT"
+id = "REPLACE_KV_ID"
