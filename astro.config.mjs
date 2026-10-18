@@ -1,12 +1,11 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const [owner, repo] = (process.env.GITHUB_REPOSITORY ?? '').split('/');
-const isUserSite = repo?.toLowerCase() === `${owner?.toLowerCase()}.github.io`;
+const CUSTOM_DOMAIN = 'gopixo.shop';
 
 export default defineConfig({
-  site: process.env.SITE_URL ?? (owner ? `https://${owner}.github.io` : 'http://localhost:4321'),
-  base: process.env.SITE_BASE ?? (repo && !isUserSite ? `/${repo}` : '/'),
+  site: process.env.SITE_URL ?? `https://${CUSTOM_DOMAIN}`,
+  base: process.env.SITE_BASE ?? '/',
   trailingSlash: 'always',
   integrations: [
     sitemap({
