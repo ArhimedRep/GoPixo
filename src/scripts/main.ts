@@ -193,6 +193,9 @@ if (form) {
             type: String(d.get('type')),
             message: String(d.get('message')).trim(),
             consent: true,
+            page: location.pathname,
+            lang: document.documentElement.lang,
+            ref: document.referrer ? new URL(document.referrer).host : '',
           }),
         });
         if (!r.ok) throw new Error(String(r.status));

@@ -10,6 +10,26 @@ const MAX_MSGS = 200;
 const RATE_PER_HOUR = 30;
 const SID_RE = /^[a-z0-9-]{16,64}$/;
 
+// Данные о посетителе для сообщения админу: IP, примерное место, устройство, страница и источник
+const visitorInfo = (req, b) => {
+  const cf = req.cf ?? {};
+  const ua = req.headers.get('User-Agent') ?? '';
+  const browser = /Edg\//.test(ua) ? 'Edge' : /OPR\/|Opera/.test(ua) ? 'Opera' : /YaBrowser/.test(ua) ? 'Яндекс Браузер' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'неизвестный браузер';
+  const os = /Windows/.test(ua) ? 'Windows' : /Android/.test(ua) ? 'Android' : /iPhone|iPad|iOS/.test(ua) ? 'iOS' : /Mac OS X|Macintosh/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : '?';
+  const device = /Mobi|Android|iPhone/.test(ua) ? 'телефон' : 'компьютер';
+  const clip = (v, n) => String(v ?? '').slice(0, n).replace(/[\r\n]+/g, ' ');
+  const where = [cf.country, cf.region, cf.city].filter(Boolean).join(', ') || 'не определено';
+  return [
+    `IP: ${req.headers.get('CF-Connecting-IP') ?? 'не определён'}`,
+    `Откуда: ${where}${cf.timezone ? ` (${cf.timezone})` : ''}`,
+    `Устройство: ${device}, ${os}, ${browser}`,
+    b.page ? `Страница: ${clip(b.page, 80)}${b.lang ? ` (${clip(b.lang, 10)})` : ''}` : '',
+    `Пришёл с: ${clip(b.ref, 120) || 'напрямую'}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+};
+
 const json = (data, status = 200, headers = {}) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8', ...headers } });
 
@@ -120,7 +140,7 @@ async function handleSend(req, env) {
   const head = `${saved.first ? '💬 Новый чат' : '💬 Чат'} #${tag}${was}${saved.name ? ` · ${saved.name}` : ''}`;
   const res = await tg(env, 'sendMessage', {
     chat_id: env.ADMIN_ID,
-    text: `${head}\n\n${text}\n\n— ответьте на это сообщение «ответом» (reply), чтобы написать посетителю`,
+    text: `${head}\n\n${text}${saved.first ? `\n\n${visitorInfo(req, b)}` : ''}\n\n— ответьте на это сообщение «ответом» (reply), чтобы написать посетителю`,
   });
   if (res.ok) await hub(env, 'index').setMap(res.result.message_id, sid);
   return json({ ok: true, id: saved.id, delivered: Boolean(res.ok) });
@@ -147,7 +167,7 @@ async function handleLead(req, env) {
   const when = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
   const res = await tg(env, 'sendMessage', {
     chat_id: env.ADMIN_ID,
-    text: `📩 Заявка с сайта\n\nИмя: ${name}\nКонтакт: ${contact}\nТип проекта: ${type}\n\n${message}\n\nСогласие на обработку ПДн: дано (${when} МСК)`,
+    text: `📩 Заявка с сайта\n\nИмя: ${name}\nКонтакт: ${contact}\nТип проекта: ${type}\n\n${message}\n\n${visitorInfo(req, b)}\n\nСогласие на обработку ПДн: дано (${when} МСК)`,
   });
   return res.ok ? json({ ok: true }) : json({ error: 'delivery_failed' }, 502);
 }

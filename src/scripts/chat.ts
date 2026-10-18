@@ -138,7 +138,16 @@ if (root) {
       const r = await fetch(`${api}/send`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ sid, text: body, name: nameEl.value.trim(), consent: true, prev: store.get('gp_prev') ?? undefined }),
+        body: JSON.stringify({
+          sid,
+          text: body,
+          name: nameEl.value.trim(),
+          consent: true,
+          prev: store.get('gp_prev') ?? undefined,
+          page: location.pathname,
+          lang: document.documentElement.lang,
+          ref: document.referrer ? new URL(document.referrer).host : '',
+        }),
       });
       if (!r.ok) throw new Error(String(r.status));
       const d = (await r.json()) as { id: number };
