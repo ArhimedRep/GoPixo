@@ -1,0 +1,31 @@
+---
+import type { Dict } from '../i18n/ru';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const p = t.process;
+---
+
+<section class="section on-ink" id="process" aria-labelledby="process-title">
+  <div class="container process__grid">
+    <div class="process__intro" data-reveal>
+      <p class="label mono">{p.label}</p>
+      <h2 class="h2" id="process-title">{p.title}</h2>
+      <p class="lead" style="margin-top:1.5rem">{p.lead}</p>
+    </div>
+    <ol class="steps" data-steps>
+      <span class="steps__fill" aria-hidden="true"></span>
+      {
+        p.steps.map((st, i) => (
+          <li class="step" data-reveal>
+            <span class="step__num mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{st.title}</h3>
+            <p>{st.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+---
+import type { Dict } from '../i18n/ru';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const words = t.hero.title.split(' ');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div>
+      <p class="hero__kicker mono" data-reveal><i></i>{t.hero.kicker}</p>
+      <h1 class="hero__title" id="hero-title" data-split>
+        {
+          words.map((w, i) => (
+            <>
+              <span class="w">
+                <span>{i === words.length - 1 ? <em>{w}</em> : w}</span>
+              </span>
+              {i < words.length - 1 ? ' ' : ''}
+            </>
+          ))
+        }
+      </h1>
+      <p class="hero__lead" data-reveal>{t.hero.lead}</p>
+      <div class="hero__actions" data-reveal>
+        <a class="btn" href="#contact">{t.hero.cta}<Arrow /></a>
+        <a class="btn btn--ghost" href="#services">{t.hero.ctaSecondary}</a>
+      </div>
+      <ul class="facts" data-reveal>
+        {t.hero.facts.map((f) => <li><b>{f.k}</b><span>{f.v}</span></li>)}
+      </ul>
+    </div>
+
+    <div class="mock-wrap" data-reveal role="img" aria-label={t.hero.mockCaption}>
+      <div class="mock" aria-hidden="true">
+        <div class="mock__bar"><i></i><i></i><i></i><span class="mock__url">{t.hero.mockUrl}</span></div>
+        <div class="mock__body">
+          <div class="sk sk--h"></div>
+          <div class="sk sk--h2"></div>
+          <div class="sk"></div>
+          <div class="sk sk--s"></div>
+          <div class="sk sk--btn"></div>
+          <div class="mock__cards"><div></div><div></div><div></div></div>
+        </div>
+      </div>
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 112 112">
+          <defs><path id="circ" d="M56,56 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" /></defs>
+          <text><textPath href="#circ" textLength="248">{t.hero.badge}</textPath></text>
+        </svg>
+        <b></b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <ul>{t.marquee.map((m) => <li>{m}</li>)}</ul>
+    <ul>{t.marquee.map((m) => <li>{m}</li>)}</ul>
+  </div>
+</div>

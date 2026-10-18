@@ -1,0 +1,38 @@
+---
+import type { Dict } from '../i18n/ru';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const w = t.work;
+---
+
+<section class="section" id="work" aria-labelledby="work-title">
+  <div class="container">
+    <div class="section-head">
+      <div data-reveal>
+        <p class="label mono">{w.label}</p>
+        <h2 class="h2" id="work-title">{w.title}</h2>
+      </div>
+      <p class="lead" data-reveal>{w.lead}</p>
+    </div>
+    <div class="work__grid">
+      <article class="case" data-reveal>
+        <span class="case__tag mono">{w.caseTag}</span>
+        <h3>{w.caseTitle}</h3>
+        <p>{w.caseText}</p>
+        <ul class="tags">{w.caseStack.map((x) => <li>{x}</li>)}</ul>
+        <ul class="checks">{w.caseFeatures.map((x) => <li>{x}</li>)}</ul>
+      </article>
+      <article class="empty" data-reveal>
+        <div>
+          <h3>{w.emptyTitle}</h3>
+          <p>{w.emptyText}</p>
+        </div>
+        <a class="btn" href="#contact">{w.emptyCta}<Arrow /></a>
+      </article>
+    </div>
+  </div>
+</section>

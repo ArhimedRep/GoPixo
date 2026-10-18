@@ -1,0 +1,71 @@
+---
+import type { Dict } from '../i18n/ru';
+import { site } from '../config/site';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const c = t.contact;
+const f = c.form;
+const cfg = {
+  email: site.email,
+  subject: f.mailSubject,
+  labels: f.mailLabels,
+  copied: f.copied,
+  copy: f.copy,
+};
+---
+
+<section class="section on-ink" id="contact" aria-labelledby="contact-title">
+  <div class="container contact__grid">
+    <div data-reveal>
+      <p class="label mono">{c.label}</p>
+      <h2 class="h2 contact__title" id="contact-title">{c.title}</h2>
+      <p class="lead" style="margin-top:1.5rem">{c.lead}</p>
+      <div class="contact__links">
+        <a class="btn" href={`https://t.me/${site.telegram}`} target="_blank" rel="noopener noreferrer">{c.telegram}<Arrow /></a>
+        <a class="btn btn--ghost" href={`mailto:${site.email}`}>{c.email}</a>
+      </div>
+    </div>
+
+    <form class="form" data-reveal novalidate data-config={JSON.stringify(cfg)} data-required={f.errRequired} data-invalid-contact={f.errContact}>
+      <p class="mono" style="color:var(--muted-on-ink)">{c.orForm}</p>
+
+      <div class="field">
+        <label class="mono" for="f-name">{f.name}</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" placeholder={f.namePh} required aria-describedby="e-name" />
+        <p class="field__err" id="e-name" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label class="mono" for="f-contact">{f.contact}</label>
+        <input id="f-contact" name="contact" type="text" autocomplete="email" placeholder={f.contactPh} required aria-describedby="e-contact" />
+        <p class="field__err" id="e-contact" aria-live="polite"></p>
+      </div>
+
+      <div class="field">
+        <label class="mono" for="f-type">{f.type}</label>
+        <select id="f-type" name="type">
+          {f.types.map((x) => <option value={x}>{x}</option>)}
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="mono" for="f-message">{f.message}</label>
+        <textarea id="f-message" name="message" rows="4" maxlength="1500" placeholder={f.messagePh} required aria-describedby="e-message"></textarea>
+        <p class="field__err" id="e-message" aria-live="polite"></p>
+      </div>
+
+      <button class="btn" type="submit">{f.submit}<Arrow /></button>
+      <p class="form__hint">{f.hint}</p>
+
+      <div class="form__ok" hidden role="status">
+        <b>{f.okTitle}</b>
+        <p>{f.okText}</p>
+        <button class="btn btn--ghost" type="button" data-copy>{f.copy}</button>
+      </div>
+    </form>
+  </div>
+</section>

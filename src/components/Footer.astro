@@ -1,0 +1,17 @@
+---
+import type { Dict } from '../i18n/ru';
+import { site } from '../config/site';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+---
+
+<footer class="footer on-ink">
+  <div class="container footer__row">
+    <span>© {new Date().getFullYear()} {site.brand}. {t.footer.rights}</span>
+    <span>{t.footer.built}</span>
+    <a href="#top">{t.footer.top} ↑</a>
+  </div>
+</footer>

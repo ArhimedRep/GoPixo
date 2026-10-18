@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import type { Dict } from '../i18n/ru';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Services from './Services.astro';
+import Process from './Process.astro';
+import Approach from './Approach.astro';
+import Work from './Work.astro';
+import Faq from './Faq.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+---
+
+<Base t={t}>
+  <Header t={t} />
+  <main id="main">
+    <Hero t={t} />
+    <Services t={t} />
+    <Process t={t} />
+    <Approach t={t} />
+    <Work t={t} />
+    <Faq t={t} />
+    <Contact t={t} />
+  </main>
+  <Footer t={t} />
+</Base>

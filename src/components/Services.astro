@@ -1,0 +1,45 @@
+---
+import type { Dict } from '../i18n/ru';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const s = t.services;
+---
+
+<section class="section" id="services" aria-labelledby="services-title">
+  <div class="container">
+    <div class="section-head">
+      <div data-reveal>
+        <p class="label mono">{s.label}</p>
+        <h2 class="h2" id="services-title">{s.title}</h2>
+      </div>
+      <p class="lead" data-reveal>{s.lead}</p>
+    </div>
+
+    <ol class="svc-list">
+      {
+        s.items.map((it, i) => (
+          <li class="svc" data-reveal>
+            <span class="svc__num mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="svc__title">{it.title}</h3>
+            <div>
+              <p class="svc__text">{it.text}</p>
+              <ul class="tags">{it.tags.map((tag) => <li>{tag}</li>)}</ul>
+            </div>
+            <div class="svc__meta">
+              <p class="svc__time">
+                <small class="mono">{s.from}</small>
+                <span>{it.time}</span>
+              </p>
+              <span class="svc__arrow" aria-hidden="true"><Arrow /></span>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="price-note" data-reveal>{s.priceNote}</p>
+  </div>
+</section>

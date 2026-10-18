@@ -1,0 +1,74 @@
+---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/onest';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+import type { Dict } from '../i18n/ru';
+import { site, hasPlaceholders } from '../config/site';
+import { withBase } from '../utils/url';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+
+if (hasPlaceholders && t.lang === 'ru') {
+  console.warn('\n[gopixo] В src/config/site.ts остались заглушки email/telegram. Замените их перед публикацией.\n');
+}
+
+const origin = Astro.site ?? new URL('http://localhost:4321');
+const abs = (p: string) => new URL(p, origin).href;
+const ruUrl = abs(withBase(''));
+const enUrl = abs(withBase('en/'));
+const canonical = t.lang === 'ru' ? ruUrl : enUrl;
+const ogImage = abs(withBase('og.png'));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.brand,
+  url: canonical,
+  description: t.meta.description,
+  inLanguage: t.htmlLang,
+  serviceType: t.services.items.map((i) => i.title),
+};
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="theme-color" content="#eeebe3" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ru" href={ruUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={ruUrl} />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.brand} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={t.lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      setTimeout(function () {
+        if (!window.__ready) document.documentElement.classList.remove('js');
+      }, 4000);
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip" href="#main">{t.skip}</a>
+    <slot />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

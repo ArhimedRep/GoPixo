@@ -1,0 +1,37 @@
+---
+import type { Dict } from '../i18n/ru';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const a = t.approach;
+const icons = [
+  'M13 2 4 14h7l-1 8 9-12h-7z',
+  'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2',
+  'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-4.5-4.5',
+  'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+];
+---
+
+<section class="section approach" id="approach" aria-labelledby="approach-title">
+  <div class="container">
+    <div class="section-head">
+      <div data-reveal>
+        <p class="label mono">{a.label}</p>
+        <h2 class="h2" id="approach-title">{a.title}</h2>
+      </div>
+    </div>
+    <ul class="cells">
+      {
+        a.items.map((it, i) => (
+          <li class="cell" data-reveal>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icons[i]} /></svg>
+            <h3>{it.title}</h3>
+            <p>{it.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

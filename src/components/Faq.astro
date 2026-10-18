@@ -1,0 +1,28 @@
+---
+import type { Dict } from '../i18n/ru';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const f = t.faq;
+---
+
+<section class="section approach" id="faq" aria-labelledby="faq-title">
+  <div class="container faq__grid">
+    <div class="faq__intro" data-reveal>
+      <p class="label mono">{f.label}</p>
+      <h2 class="h2" id="faq-title">{f.title}</h2>
+    </div>
+    <div class="faq-list" data-reveal>
+      {
+        f.items.map((it) => (
+          <details class="faq-item">
+            <summary>{it.q}<i aria-hidden="true"></i></summary>
+            <p class="faq-item__a">{it.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

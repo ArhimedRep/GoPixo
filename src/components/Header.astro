@@ -1,0 +1,48 @@
+---
+import type { Dict } from '../i18n/ru';
+import { site } from '../config/site';
+import { withBase } from '../utils/url';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  t: Dict;
+}
+const { t } = Astro.props;
+const isRu = t.lang === 'ru';
+const home = isRu ? withBase('') : withBase('en/');
+---
+
+<header class="header" id="top">
+  <div class="container header__bar">
+    <a class="brand" href={home} aria-label={site.brand}><i></i>{site.brand}</a>
+
+    <nav class="nav" aria-label={t.nav.mainLabel}>
+      {t.nav.items.map((i) => <a href={`#${i.id}`} data-nav={i.id}>{i.label}</a>)}
+    </nav>
+
+    <div class="header__tools">
+      <div class="lang mono" role="group" aria-label={t.nav.langLabel}>
+        <a href={withBase('')} hreflang="ru" lang="ru" aria-current={isRu ? 'true' : undefined}>RU</a>
+        <a href={withBase('en/')} hreflang="en" lang="en" aria-current={!isRu ? 'true' : undefined}>EN</a>
+      </div>
+      <a class="btn header__cta" href="#contact">{t.nav.cta}<Arrow /></a>
+      <button
+        class="burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label={t.nav.menuOpen}
+        data-open-label={t.nav.menuOpen}
+        data-close-label={t.nav.menuClose}
+      >
+        <span></span>
+      </button>
+    </div>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</header>
+
+<div class="menu" id="menu" data-open="false">
+  {t.nav.items.map((i) => <a href={`#${i.id}`}>{i.label}</a>)}
+  <a class="btn" href="#contact">{t.nav.cta}<Arrow /></a>
+</div>
