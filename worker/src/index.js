@@ -3,6 +3,7 @@
 // Админ отвечает реплаем на сообщение -> ответ появляется в окне чата на сайте.
 // Секреты (не в репозитории): BOT_TOKEN, ADMIN_ID, WEBHOOK_SECRET.
 import { DurableObject } from 'cloudflare:workers';
+import { EmailMessage } from 'cloudflare:email';
 
 const TTL = 60 * 60 * 24 * 30; // хранить переписку 30 дней (секунды)
 const MAX_TEXT = 1000;
@@ -28,6 +29,37 @@ const visitorInfo = (req, b) => {
   ]
     .filter(Boolean)
     .join('\n');
+};
+
+// Письмо с заявкой на почту владельца (Cloudflare Email Routing). Ошибка отправки не ломает приём заявки.
+const b64 = (str) => {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin).replace(/.{1,76}/g, '$&\r\n').trimEnd();
+};
+
+const sendMail = async (env, { subject, text, replyTo }) => {
+  if (!env.MAIL || !env.MAIL_TO || !env.MAIL_FROM) return false;
+  try {
+    const headers = [
+      `From: GoPixo <${env.MAIL_FROM}>`,
+      `To: ${env.MAIL_TO}`,
+      `Subject: =?UTF-8?B?${btoa(String.fromCharCode(...new TextEncoder().encode(subject)))}?=`,
+      replyTo ? `Reply-To: ${replyTo}` : '',
+      `Date: ${new Date().toUTCString()}`,
+      `Message-ID: <${crypto.randomUUID()}@${env.MAIL_FROM.split('@')[1]}>`,
+      'MIME-Version: 1.0',
+      'Content-Type: text/plain; charset=UTF-8',
+      'Content-Transfer-Encoding: base64',
+    ].filter(Boolean);
+    const raw = `${headers.join('\r\n')}\r\n\r\n${b64(text)}\r\n`;
+    await env.MAIL.send(new EmailMessage(env.MAIL_FROM, env.MAIL_TO, raw));
+    return true;
+  } catch (e) {
+    console.log('mail failed', String(e));
+    return false;
+  }
 };
 
 const json = (data, status = 200, headers = {}) =>
@@ -173,11 +205,12 @@ async function handleLead(req, env) {
   if (!(await hub(env, 'limits').hit(`l:${ip}`, 8))) return json({ error: 'rate_limited' }, 429);
 
   const when = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
-  const res = await tg(env, 'sendMessage', {
-    chat_id: env.ADMIN_ID,
-    text: `📩 Заявка с сайта\n\nИмя: ${name}\nКонтакт: ${contact}\nТип проекта: ${type}\n\n${message}\n\n${visitorInfo(req, b)}\n\nСогласие на обработку ПДн: дано (${when} МСК)`,
-  });
-  return res.ok ? json({ ok: true }) : json({ error: 'delivery_failed' }, 502);
+  const body = `Имя: ${name}\nКонтакт: ${contact}\nТип проекта: ${type}\n\n${message}\n\n${visitorInfo(req, b)}\n\nСогласие на обработку ПДн: дано (${when} МСК)`;
+  const [res, mailed] = await Promise.all([
+    tg(env, 'sendMessage', { chat_id: env.ADMIN_ID, text: `📩 Заявка с сайта\n\n${body}` }),
+    sendMail(env, { subject: `Заявка с сайта GoPixo: ${name}`, text: `Заявка с сайта gopixo.shop\n\n${body}`, replyTo: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact) ? contact : '' }),
+  ]);
+  return res.ok || mailed ? json({ ok: true }) : json({ error: 'delivery_failed' }, 502);
 }
 
 async function handlePoll(url, env) {

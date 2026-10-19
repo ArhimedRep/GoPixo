@@ -95,16 +95,17 @@ document.querySelectorAll<HTMLAnchorElement>('[data-service]').forEach((a) => {
   });
 });
 
-// Mail link: if no mail app opened, show the address with copy and Gmail options
+// Mail link: show the address with copy and Gmail options instead of relying on mailto
 const mailLink = document.querySelector<HTMLAnchorElement>('[data-mail]');
 const mailFb = document.querySelector<HTMLElement>('[data-mailfb]');
 if (mailLink && mailFb) {
   const copyBtn = mailFb.querySelector<HTMLButtonElement>('[data-mailcopy]')!;
-  mailLink.addEventListener('click', () => {
-    // если почтовое приложение запустилось, окно теряет фокус; иначе через секунду показываем запасной вариант
-    window.setTimeout(() => {
-      if (document.hasFocus() && !document.hidden) mailFb.hidden = false;
-    }, 1000);
+  // mailto зависит от почтовой программы на устройстве и у многих открывает пустую вкладку,
+  // поэтому вместо него сразу показываем адрес, копирование и Gmail (без JS остаётся обычная ссылка)
+  mailLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    mailFb.hidden = false;
+    mailFb.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
   });
   copyBtn.addEventListener('click', async () => {
     try {

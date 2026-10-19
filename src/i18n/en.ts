@@ -180,7 +180,7 @@ export const en: Dict = {
     lead: 'Describe the task in a few sentences. I will come back with questions and a rough estimate.',
     telegram: 'Message on Telegram',
     email: 'Send an email',
-    mailHint: 'Mail app did not open? Write to:',
+    mailHint: 'Write to:',
     mailCopy: 'Copy address',
     mailCopied: 'Copied',
     mailGmail: 'Open in Gmail',

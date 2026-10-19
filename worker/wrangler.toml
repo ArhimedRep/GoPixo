@@ -3,6 +3,8 @@ main = "src/index.js"
 compatibility_date = "2025-01-01"
 
 [vars]
+MAIL_FROM = "site@gopixo.shop"
+MAIL_TO = "gopixo.support@gmail.com"
 ALLOWED_ORIGINS = "https://gopixo.shop,https://www.gopixo.shop,http://gopixo.shop,http://www.gopixo.shop,https://arhimedrep.github.io"
 
 # Переписка хранится в Durable Objects: запись видна сразу, без задержки KV
@@ -13,3 +15,8 @@ class_name = "Hub"
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Hub"]
+
+# Письма с заявками: Cloudflare Email Routing, адрес получателя должен быть подтверждён в аккаунте
+[[send_email]]
+name = "MAIL"
+destination_address = "gopixo.support@gmail.com"
