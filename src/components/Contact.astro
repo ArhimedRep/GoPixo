@@ -33,7 +33,14 @@ const cfg = {
       <p class="lead" style="margin-top:1.5rem">{c.lead}</p>
       <div class="contact__links">
         <a class="btn" href={`https://t.me/${site.telegram}`} target="_blank" rel="noopener noreferrer">{c.telegram}<Arrow /></a>
-        <a class="btn btn--ghost" href={`mailto:${site.email}`}>{c.email}</a>
+        <a class="btn btn--ghost" href={`mailto:${site.email}`} data-mail>{c.email}</a>
+      </div>
+      <div class="mailfb" hidden data-mailfb data-email={site.email} data-copied={c.mailCopied} data-copy={c.mailCopy}>
+        <p>{c.mailHint} <b>{site.email}</b></p>
+        <div class="mailfb__row">
+          <button class="btn btn--ghost" type="button" data-mailcopy>{c.mailCopy}</button>
+          <a class="btn btn--ghost" href={`https://mail.google.com/mail/?view=cm&fs=1&to=${site.email}`} target="_blank" rel="noopener noreferrer">{c.mailGmail}</a>
+        </div>
       </div>
     </div>
 

@@ -95,6 +95,28 @@ document.querySelectorAll<HTMLAnchorElement>('[data-service]').forEach((a) => {
   });
 });
 
+// Mail link: if no mail app opened, show the address with copy and Gmail options
+const mailLink = document.querySelector<HTMLAnchorElement>('[data-mail]');
+const mailFb = document.querySelector<HTMLElement>('[data-mailfb]');
+if (mailLink && mailFb) {
+  const copyBtn = mailFb.querySelector<HTMLButtonElement>('[data-mailcopy]')!;
+  mailLink.addEventListener('click', () => {
+    // если почтовое приложение запустилось, окно теряет фокус; иначе через секунду показываем запасной вариант
+    window.setTimeout(() => {
+      if (document.hasFocus() && !document.hidden) mailFb.hidden = false;
+    }, 1000);
+  });
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(mailFb.dataset.email ?? '');
+      copyBtn.textContent = mailFb.dataset.copied ?? '';
+      window.setTimeout(() => (copyBtn.textContent = mailFb.dataset.copy ?? ''), 2000);
+    } catch {
+      copyBtn.textContent = mailFb.dataset.email ?? '';
+    }
+  });
+}
+
 // Contact form: sends the request to the Worker (Telegram); falls back to a mailto draft if that fails
 const form = document.querySelector<HTMLFormElement>('form[data-config]');
 if (form) {

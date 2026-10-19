@@ -1766,3 +1766,28 @@ textarea {
 .chat__new:hover {
   color: var(--paper);
 }
+
+.mailfb {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line-on-ink);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: var(--muted-on-ink);
+}
+.mailfb[hidden] {
+  display: none;
+}
+.mailfb b {
+  color: var(--paper);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.mailfb p {
+  margin: 0 0 0.8rem;
+}
+.mailfb__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
