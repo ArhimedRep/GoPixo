@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+<title>Горы на закате: векторный пейзаж</title>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#14183f"/>
+<stop offset="0.35" stop-color="#5a3a8c"/>
+<stop offset="0.62" stop-color="#ff7a59"/>
+<stop offset="0.8" stop-color="#ffcf8a"/>
+</linearGradient>
+<radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+<stop offset="0" stop-color="#fff1c9" stop-opacity="0.9"/>
+<stop offset="1" stop-color="#fff1c9" stop-opacity="0"/>
+</radialGradient>
+<g id="pine">
+<polygon points="0,-130 38,-62 -38,-62"/>
+<polygon points="0,-96 52,-14 -52,-14"/>
+<polygon points="0,-58 66,34 -66,34"/>
+<rect x="-9" y="34" width="18" height="36"/>
+</g>
+</defs>
+<rect width="1600" height="1200" fill="url(#sky)"/>
+<g fill="#fff1c9">
+<circle cx="140" cy="120" r="3"/><circle cx="330" cy="70" r="2.5"/><circle cx="520" cy="170" r="3"/>
+<circle cx="760" cy="90" r="2"/><circle cx="980" cy="150" r="3"/><circle cx="1180" cy="80" r="2.5"/>
+<circle cx="1390" cy="190" r="3"/><circle cx="1510" cy="100" r="2"/><circle cx="640" cy="260" r="2"/>
+<circle cx="1280" cy="280" r="2"/><circle cx="220" cy="300" r="2"/>
+</g>
+<circle cx="800" cy="650" r="330" fill="url(#glow)"/>
+<circle cx="800" cy="650" r="150" fill="#fff1c9"/>
+<path d="M0 700 L180 520 L320 640 L520 430 L700 620 L860 500 L1040 660 L1240 470 L1420 620 L1600 520 V1200 H0 Z" fill="#8a4f8f"/>
+<path d="M0 800 L220 600 L400 760 L640 560 L880 780 L1100 620 L1320 790 L1600 640 V1200 H0 Z" fill="#533079"/>
+<path d="M0 920 L260 740 L480 900 L760 700 L1020 920 L1300 760 L1600 900 V1200 H0 Z" fill="#2f1f5e"/>
+<path d="M0 1030 Q400 940 800 1010 T1600 990 V1200 H0 Z" fill="#170f36"/>
+<g fill="#0b0820">
+<use href="#pine" transform="translate(110 1010) scale(1.1)"/>
+<use href="#pine" transform="translate(260 1050) scale(0.8)"/>
+<use href="#pine" transform="translate(420 1030) scale(1.3)"/>
+<use href="#pine" transform="translate(1130 1020) scale(1)"/>
+<use href="#pine" transform="translate(1300 1060) scale(1.4)"/>
+<use href="#pine" transform="translate(1470 1020) scale(0.9)"/>
+<use href="#pine" transform="translate(1560 1080) scale(1.2)"/>
+</g>
+<g fill="none" stroke="#fff1c9" stroke-width="4" stroke-linecap="round">
+<path d="M300 330 q14 -16 28 0 q14 -16 28 0"/>
+<path d="M380 280 q10 -12 20 0 q10 -12 20 0"/>
+<path d="M1160 360 q12 -14 24 0 q12 -14 24 0"/>
+<path d="M1230 310 q9 -11 18 0 q9 -11 18 0"/>
+</g>
+</svg>

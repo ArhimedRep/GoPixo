@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+<title>Геометрическая эмблема лисы</title>
+<rect width="1600" height="1200" fill="#f4efe6"/>
+<circle cx="800" cy="600" r="470" fill="#1f2a44"/>
+<circle cx="800" cy="600" r="440" fill="none" stroke="#f4efe6" stroke-width="10"/>
+<circle cx="800" cy="600" r="410" fill="none" stroke="#ff7a45" stroke-width="4" stroke-dasharray="2 22" stroke-linecap="round"/>
+<g>
+<polygon points="560,360 700,500 900,500 1040,360 1040,640 800,880 560,640" fill="#ff7a45"/>
+<polygon points="560,640 800,880 1040,640 800,730" fill="#f4efe6"/>
+<polygon points="800,500 830,600 800,670 770,600" fill="#ffb089"/>
+<polygon points="590,430 670,510 590,570" fill="#1f2a44"/>
+<polygon points="1010,430 930,510 1010,570" fill="#1f2a44"/>
+<polygon points="670,610 745,645 705,680" fill="#1f2a44"/>
+<polygon points="930,610 855,645 895,680" fill="#1f2a44"/>
+<polygon points="770,805 830,805 800,840" fill="#1f2a44"/>
+</g>
+<g fill="#f4efe6">
+<circle cx="800" cy="170" r="8"/><circle cx="800" cy="1030" r="8"/>
+<circle cx="370" cy="600" r="8"/><circle cx="1230" cy="600" r="8"/>
+</g>
+</svg>

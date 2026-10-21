@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+<title>Набор из восьми векторных иконок</title>
+<rect width="1600" height="1200" fill="#12121c"/>
+<g fill="#1f1f30">
+<rect x="125" y="250" width="300" height="300" rx="44"/>
+<rect x="475" y="250" width="300" height="300" rx="44"/>
+<rect x="825" y="250" width="300" height="300" rx="44"/>
+<rect x="1175" y="250" width="300" height="300" rx="44"/>
+<rect x="125" y="650" width="300" height="300" rx="44"/>
+<rect x="475" y="650" width="300" height="300" rx="44"/>
+<rect x="825" y="650" width="300" height="300" rx="44"/>
+<rect x="1175" y="650" width="300" height="300" rx="44"/>
+</g>
+<g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(275 400)" stroke="#ff6b4a">
+<path d="M-60 -30 H50 V30 Q50 70 10 70 H-20 Q-60 70 -60 30 Z"/>
+<path d="M50 -10 H70 Q90 -10 90 15 Q90 40 66 40 H48"/>
+<path d="M-30 -52 q10 -15 0 -30 M10 -52 q10 -15 0 -30"/>
+</g>
+<g transform="translate(625 400)" stroke="#ffd166">
+<rect x="-80" y="-45" width="160" height="110" rx="18"/>
+<circle cx="0" cy="10" r="30"/>
+<path d="M-30 -45 L-18 -70 H18 L30 -45"/>
+</g>
+<g transform="translate(975 400)" stroke="#06d6a0">
+<path d="M0 -85 Q50 -40 40 30 L0 60 L-40 30 Q-50 -40 0 -85 Z"/>
+<circle cx="0" cy="-20" r="12"/>
+<path d="M-40 30 L-70 60 L-40 55 M40 30 L70 60 L40 55"/>
+<path d="M-12 74 Q0 100 12 74"/>
+</g>
+<g transform="translate(1325 400)" stroke="#4cc9f0">
+<circle cx="0" cy="-25" r="45"/>
+<path d="M-22 40 H22 M-16 58 H16 M-8 76 H8"/>
+<path d="M0 -95 V-110 M-60 -60 L-72 -70 M60 -60 L72 -70"/>
+</g>
+<g transform="translate(275 800)" stroke="#ff8fab">
+<path d="M0 70 C-90 10 -70 -60 -30 -60 C-10 -60 0 -45 0 -35 C0 -45 10 -60 30 -60 C70 -60 90 10 0 70 Z"/>
+</g>
+<g transform="translate(625 800)" stroke="#b388ff">
+<path d="M0 -80 L65 -55 V10 Q65 55 0 85 Q-65 55 -65 10 V-55 Z"/>
+<path d="M-25 5 L-5 25 L30 -15"/>
+</g>
+<g transform="translate(975 800)" stroke="#8ecae6">
+<path d="M0 85 C-50 20 -60 0 -60 -25 A60 60 0 0 1 60 -25 C60 0 50 20 0 85 Z"/>
+<circle cx="0" cy="-25" r="22"/>
+</g>
+<g transform="translate(1325 800)" stroke="#f4a261">
+<path d="M-80 -55 H80 Q90 -55 90 -45 V30 Q90 40 80 40 H-10 L-45 75 V40 H-80 Q-90 40 -90 30 V-45 Q-90 -55 -80 -55 Z"/>
+<g fill="#f4a261" stroke="none"><circle cx="-40" cy="-8" r="8"/><circle cx="0" cy="-8" r="8"/><circle cx="40" cy="-8" r="8"/></g>
+</g>
+</g>
+</svg>

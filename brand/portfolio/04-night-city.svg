@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+<title>Ночной город: векторная иллюстрация</title>
+<defs>
+<linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#070a1f"/>
+<stop offset="0.65" stop-color="#2b2f6b"/>
+<stop offset="1" stop-color="#6a4a9c"/>
+</linearGradient>
+<pattern id="winA" width="80" height="80" patternUnits="userSpaceOnUse">
+<rect x="14" y="14" width="22" height="26" rx="3" fill="#ffd166"/>
+<rect x="46" y="14" width="22" height="26" rx="3" fill="#2a3270"/>
+<rect x="14" y="48" width="22" height="26" rx="3" fill="#2a3270"/>
+<rect x="46" y="48" width="22" height="26" rx="3" fill="#ffd166"/>
+</pattern>
+<pattern id="winB" width="80" height="80" patternUnits="userSpaceOnUse">
+<rect x="14" y="14" width="22" height="26" rx="3" fill="#2a3270"/>
+<rect x="46" y="14" width="22" height="26" rx="3" fill="#ffe29a"/>
+<rect x="14" y="48" width="22" height="26" rx="3" fill="#ffd166"/>
+<rect x="46" y="48" width="22" height="26" rx="3" fill="#2a3270"/>
+</pattern>
+<mask id="moon">
+<rect width="1600" height="1200" fill="#ffffff"/>
+<circle cx="1290" cy="215" r="82" fill="#000000"/>
+</mask>
+</defs>
+<rect width="1600" height="1200" fill="url(#night)"/>
+<g fill="#f5f1d0">
+<circle cx="120" cy="100" r="3"/><circle cx="300" cy="200" r="2.5"/><circle cx="470" cy="80" r="3"/>
+<circle cx="640" cy="170" r="2"/><circle cx="820" cy="90" r="3"/><circle cx="980" cy="230" r="2.5"/>
+<circle cx="1110" cy="110" r="2"/><circle cx="1480" cy="300" r="3"/><circle cx="1540" cy="130" r="2"/>
+<circle cx="220" cy="330" r="2"/><circle cx="740" cy="320" r="2"/>
+</g>
+<circle cx="1250" cy="250" r="95" fill="#f5f1d0" mask="url(#moon)"/>
+<g>
+<rect x="0" y="800" width="240" height="400" fill="#141a3f"/>
+<rect x="0" y="800" width="240" height="400" fill="url(#winA)"/>
+<rect x="240" y="640" width="160" height="560" fill="#1a2150"/>
+<rect x="240" y="640" width="160" height="560" fill="url(#winB)"/>
+<rect x="400" y="880" width="240" height="320" fill="#101534"/>
+<rect x="400" y="880" width="240" height="320" fill="url(#winA)"/>
+<rect x="640" y="560" width="160" height="640" fill="#141a3f"/>
+<rect x="640" y="560" width="160" height="640" fill="url(#winB)"/>
+<rect x="800" y="720" width="240" height="480" fill="#1a2150"/>
+<rect x="800" y="720" width="240" height="480" fill="url(#winA)"/>
+<rect x="1040" y="640" width="160" height="560" fill="#101534"/>
+<rect x="1040" y="640" width="160" height="560" fill="url(#winB)"/>
+<rect x="1200" y="800" width="240" height="400" fill="#141a3f"/>
+<rect x="1200" y="800" width="240" height="400" fill="url(#winA)"/>
+<rect x="1440" y="720" width="160" height="480" fill="#1a2150"/>
+<rect x="1440" y="720" width="160" height="480" fill="url(#winB)"/>
+</g>
+<path d="M720 560 V470" stroke="#9aa3d9" stroke-width="6" stroke-linecap="round"/>
+<circle cx="720" cy="462" r="9" fill="#ff4a1c"/>
+<rect y="1120" width="1600" height="80" fill="#0a0d22"/>
+<path d="M0 1160 H1600" stroke="#ffd166" stroke-width="6" stroke-dasharray="60 40" opacity="0.8"/>
+</svg>
